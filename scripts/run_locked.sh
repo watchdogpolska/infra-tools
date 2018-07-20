@@ -6,6 +6,7 @@ if [ -z "$2" ]; then
 fi
 
 LOCKDIR=/var/lock
+LOCKNAME=$1
 LOCKFILE=${LOCKDIR}/$1.lock
 TIMEFILE=${LOCKDIR}/$1.time
 shift
@@ -17,5 +18,7 @@ date +%s > $TIMEFILE
 trap "flock -u 99" EXIT
 
 eval $@
-exit $?
+exitcode=$?
+[[ -e $TIMEFILE.maxokdelay ]] && zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k cronjobs.$LOCKNAME -o $exitcode &>/dev/null
+exit $exitcode
 
