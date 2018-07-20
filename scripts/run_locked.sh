@@ -19,6 +19,6 @@ trap "flock -u 99" EXIT
 
 eval $@
 exitcode=$?
-[[ -e $TIMEFILE.maxokdelay ]] && zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k cronjobs.$LOCKNAME -o $exitcode &>/dev/null
+[[ -e $TIMEFILE.maxokdelay ]] && zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k custom.cronjobs.$LOCKNAME -o $exitcode &>/dev/null
 exit $exitcode
 
