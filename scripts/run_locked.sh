@@ -14,7 +14,7 @@ shift
 exec 99>$LOCKFILE
 flock -xn 99 || { echo Lock acquired by other process $(( $(date +%s)-$(cat $TIMEFILE) )) seconds ago, exiting && exit 1; }
 date +%s > $TIMEFILE
-[[ $1 =~ ^[0-9]*$ ]] && { echo $1 > $TIMEFILE.maxokdelay; shift; }
+[[ $1 =~ ^[0-9]*[mhd]?$ ]] && { echo $1 > $TIMEFILE.maxokdelay; shift; }
 trap "flock -u 99" EXIT
 
 eval $@
