@@ -17,8 +17,10 @@ date +%s > $TIMEFILE
 [[ $1 =~ ^[0-9]*[mhd]?$ ]] && { echo $1 > $TIMEFILE.maxokdelay; shift; }
 trap "flock -u 99" EXIT
 
-eval $@
+output=$(eval $@)
 exitcode=$?
 [[ -e $TIMEFILE.maxokdelay ]] && zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k custom.cronjobs[$LOCKNAME] -o $exitcode &>/dev/null
+zabbix_sender -c /etc/zabbix/zabbix_agentd.conf -k custom.cronjobs[$LOCKNAME,out] -o "$output" &>/dev/null
+
 exit $exitcode
 
